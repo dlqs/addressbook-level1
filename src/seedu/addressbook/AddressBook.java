@@ -115,6 +115,10 @@ public class AddressBook {
     private static final String COMMAND_LIST_DESC = "Displays all persons as a list with index numbers.";
     private static final String COMMAND_LIST_EXAMPLE = COMMAND_LIST_WORD;
 
+    private static final String COMMAND_SHOW_NAMES_WORD = "names";
+    private static final String COMMAND_SHOW_NAMES_DESC = "Displays all persons as a list with their names.";
+    private static final String COMMAND_SHOW_NAMES_EXAMPLE = COMMAND_SHOW_NAMES_WORD;
+
     private static final String COMMAND_DELETE_WORD = "delete";
     private static final String COMMAND_DELETE_DESC = "Deletes a person identified by the index number used in "
                                                     + "the last find/list call.";
@@ -375,6 +379,8 @@ public class AddressBook {
             return executeFindPersons(commandArgs);
         case COMMAND_LIST_WORD:
             return executeListAllPersonsInAddressBook();
+        case COMMAND_SHOW_NAMES_WORD:
+             return executeShowNamesAllPersonsInAddressBook();
         case COMMAND_DELETE_WORD:
             return executeDeletePerson(commandArgs);
         case COMMAND_CLEAR_WORD:
@@ -580,6 +586,22 @@ public class AddressBook {
     }
 
     /**
+     * Displays all persons' names in the address book to the user; in added order.
+     *
+     * @return feedback display message for the operation result
+     */
+    private static String executeShowNamesAllPersonsInAddressBook() {
+        ArrayList<String> namesToBeDisplayed = new ArrayList<>();
+        ArrayList<String[]> toBeDisplayed = getAllPersonsInAddressBook();
+        for (String[] person : toBeDisplayed) {
+            String name = getNameFromPerson(person);
+            namesToBeDisplayed.add(name);
+        }
+        showNamesToUser(namesToBeDisplayed);
+        return getMessageForPersonsDisplayedSummary(toBeDisplayed);
+    }
+
+    /**
      * Requests to terminate the program.
      */
     private static void executeExitProgramRequest() {
@@ -633,6 +655,17 @@ public class AddressBook {
         String listAsString = getDisplayString(persons);
         showToUser(listAsString);
         updateLatestViewedPersonListing(persons);
+    }
+
+    /**
+     * Shows the list of names of persons to the user.
+     * The list will be indexed, starting from 1.
+     *
+     */
+    private static void showNamesToUser(ArrayList<String> names) {
+        for (String name: names) {
+            System.out.println(LINE_PREFIX + name);
+        }
     }
 
     /**
